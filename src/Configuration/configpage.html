@@ -1,0 +1,205 @@
+<div is="emby-scroller" class="view flex flex-direction-column scrollFrameY flex-grow withTabs" data-horizontal="false" data-forcescrollbar="true" data-centerfocus="true" data-bindheader="true" data-title="Gotify 通知设置" data-controller="__plugin/gotifynotifierjs">
+    <div class="scrollSlider flex-grow flex-direction-column padded-left padded-left-page padded-right padded-top-page padded-bottom-page settingsContainer">
+
+        <div class="gotifyStatus" style="display:none"></div>
+
+        <form class="gotifyConfigurationForm auto-center fieldsets">
+
+            <fieldset>
+                <legend>服务器设置</legend>
+
+                <div class="fieldset-fields">
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="text" class="txtServerUrl" required="required" label="Gotify 服务器地址" autocomplete="off" />
+                        <div class="fieldDescription">Gotify 服务地址，例如 https://gotify.example.com，末尾不要带斜杠。</div>
+                    </div>
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="password" class="txtToken" label="应用 Token" autocomplete="new-password" />
+                        <div class="fieldDescription">Token 不会明文显示，只显示前 4 位与后 4 位（如 <code>A1b2********wxyz</code>）；不修改即保留原值。<button type="button" class="gotifyLinkButton btnToggleToken">显示</button>　<button type="button" class="gotifyLinkButton btnClearToken">清除</button></div>
+                    </div>
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="number" class="txtPriority" min="0" max="10" step="1" label="消息优先级" />
+                        <div class="fieldDescription">Gotify 消息优先级，0-10，数字越大通知提醒越强。默认 5。</div>
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>通知选项</legend>
+
+                <div class="fieldset-fields">
+
+                    <div class="toggleContainer fieldset-field">
+                        <label>
+                            <input type="checkbox" is="emby-toggle" class="chkEnableImages" />
+                            <span>附带海报大图</span>
+                        </label>
+                        <div class="fieldDescription toggleFieldDescription">在手机通知中附带影视海报/剧集封面。需要 Emby 已配置「远程访问」外部地址。</div>
+                    </div>
+
+                    <div class="toggleContainer fieldset-field">
+                        <label>
+                            <input type="checkbox" is="emby-toggle" class="chkDisableTlsValidation" />
+                            <span>跳过 HTTPS 证书校验</span>
+                        </label>
+                        <div class="fieldDescription toggleFieldDescription">Gotify 使用自签名证书且无法替换时勾选。正常有效证书无需勾选。</div>
+                    </div>
+
+                    <div class="toggleContainer fieldset-field">
+                        <label>
+                            <input type="checkbox" is="emby-toggle" class="chkMergeLibraryNotifications" />
+                            <span>合并入库通知</span>
+                        </label>
+                        <div class="fieldDescription toggleFieldDescription">一次扫描新增大量媒体时，将多条入库通知合并为一条发送，避免手机连续震动。</div>
+                    </div>
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="number" class="txtMergeWindowSeconds" min="2" step="1" label="合并窗口（秒）" />
+                        <div class="fieldDescription">在此时间窗口内到达的入库通知会被合并为一条。默认 10 秒，最小 2 秒。</div>
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>通知模板</legend>
+
+                <div class="fieldset-fields">
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="text" class="txtTitleTemplate" label="标题模板" />
+                        <div class="fieldDescription">推送通知的标题。留空则使用默认标题「🎬 新片入库」。</div>
+                        <div class="gotifyVars" data-group="title"></div>
+                    </div>
+
+                    <div class="inputContainer fieldset-field">
+                        <textarea is="emby-textarea" class="txtMessageTemplate" label="内容模板"></textarea>
+                        <div class="fieldDescription">推送通知的正文。留空则只显示标题行与简介。</div>
+                        <div class="gotifyVars" data-group="message"></div>
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>内容增强</legend>
+
+                <div class="fieldset-fields">
+
+                    <div class="toggleContainer fieldset-field">
+                        <label>
+                            <input type="checkbox" is="emby-toggle" class="chkUseMarkdown" />
+                            <span>Markdown 排版</span>
+                        </label>
+                        <div class="fieldDescription toggleFieldDescription">正文用 Markdown 生成（加粗标题、评分/年份/类型一行、简介引用块）。仅在正文模板为默认值时生效。</div>
+                    </div>
+
+                    <div class="toggleContainer fieldset-field">
+                        <label>
+                            <input type="checkbox" is="emby-toggle" class="chkUseBackdrop" />
+                            <span>使用横版剧照</span>
+                        </label>
+                        <div class="fieldDescription toggleFieldDescription">手机通知横幅更适合 16:9 剧照；没有剧照时自动回退到竖版海报。</div>
+                    </div>
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="url" class="txtExternalUrl" label="外部访问地址（用于点击跳转）" />
+                        <div class="fieldDescription">例如 https://emby.example.com。填写后点通知会直接打开该媒体的详情页；留空则使用 Emby 自带的地址（可能为空）。</div>
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>过滤与个性化</legend>
+
+                <div class="fieldset-fields">
+
+                    <div class="toggleContainer fieldset-field">
+                        <label>
+                            <input type="checkbox" is="emby-toggle" class="chkFilterEnabled" />
+                            <span>启用过滤规则</span>
+                        </label>
+                        <div class="fieldDescription toggleFieldDescription">开启后只有满足下面条件的媒体才会推送；系统/任务类通知不受影响。</div>
+                    </div>
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="text" class="txtIncludeItemTypes" label="媒体类型" placeholder="Movie,Episode" />
+                        <div class="fieldDescription">逗号分隔：Movie（电影）、Episode（剧集）、Series（剧集整体）、Audio（音乐）。留空表示不限。</div>
+                    </div>
+
+                    <div class="fieldset-field">
+                        <div class="fieldDescription" style="margin-bottom:6px">只推送这些媒体库（不勾选表示全部）：</div>
+                        <div class="gotifyLibraryList"></div>
+                    </div>
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="text" class="txtIncludeTags" label="包含标签" placeholder="4K,HDR" />
+                        <div class="fieldDescription">命中任意一个标签即推送，逗号分隔。留空表示不限。</div>
+                    </div>
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="number" class="txtMinRating" min="0" max="10" step="1" label="最低评分（整数，0 表示不限）" />
+                        <div class="fieldDescription">只推送社区评分不低于该值的媒体；未评分的媒体不受此规则限制。</div>
+                    </div>
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="number" class="txtMinYear" min="0" step="1" label="最早年份（0 表示不限）" />
+                        <div class="fieldDescription">只推送该年份及以后的作品；没有年份信息的媒体不受限制。</div>
+                    </div>
+
+                    <div class="inputContainer fieldset-field">
+                        <input is="emby-input" type="text" class="txtExcludeKeywords" label="忽略关键字" placeholder="样片,预告,花絮" />
+                        <div class="fieldDescription">名称或简介包含这些词就不推送，逗号分隔。</div>
+                    </div>
+
+                    <div class="toggleContainer fieldset-field">
+                        <label>
+                            <input type="checkbox" is="emby-toggle" class="chkFollowOnly" />
+                            <span>追剧模式</span>
+                        </label>
+                        <div class="fieldDescription toggleFieldDescription">只推送「已经有人看过该剧」的新剧集，避免整季入库刷屏。电影不受影响。</div>
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>诊断（真实入库收不到时看这里）</legend>
+
+                <div class="fieldset-fields">
+                    <div class="gotifyDiagSummary"></div>
+                    <div class="gotifyDiagUsers"></div>
+
+                    <div class="flex flex-wrap-wrap" style="margin:1em 0;gap:8px">
+                        <button is="emby-button" type="button" class="raised btnSimulateIngest"><span>模拟一次入库</span></button>
+                        <button is="emby-button" type="button" class="raised btnRefreshDiag"><span>刷新诊断</span></button>
+                    </div>
+
+                    <div class="fieldDescription">「模拟入库」会通过 Emby 通知系统（用户通知配置 → 插件）发送一条真实的入库通知，用来区分是「插件/网络问题」还是「Emby 没触发事件」。</div>
+
+                    <div class="gotifyDiagHistory"></div>
+                </div>
+            </fieldset>
+
+            <div class="flex flex-wrap-wrap" style="margin:1em 0">
+
+                <button is="emby-button" type="button" class="raised btnTest flex-grow justify-content-center">
+                    <i class="md-icon button-icon button-icon-left">notifications_active</i>
+                    <span>发送测试通知</span>
+                </button>
+
+            </div>
+
+            <div class="fieldDescription" style="margin-bottom:1em">「发送测试通知」会按当前模板生成一条示意通知，手机上的排版与真实入库通知一致；直接使用上方填写的内容，无需先保存。保存后入库通知立即按新配置生效。</div>
+
+            <button is="emby-button" type="submit" class="raised btnSave block"><span>保存</span></button>
+
+            <div class="pluginVersion" style="margin-top:1.5em;text-align:center;opacity:0.6"></div>
+        </form>
+    </div>
+</div>

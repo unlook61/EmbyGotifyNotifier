@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Emby.GotifyNotifier</AssemblyName>
+    <RootNamespace>Emby.Plugin.GotifyNotifications</RootNamespace>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Version>2.0.0</Version>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="mediabrowser.server.core" Version="4.8.11" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+  </ItemGroup>
+
+  <!-- 配置页嵌入资源：HTML 主页面 + JS 控制器 -->
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\configpage.html" />
+    <EmbeddedResource Include="Configuration\configpage.js" />
+    <EmbeddedResource Include="Configuration\entryeditor.js" />
+    <EmbeddedResource Include="Configuration\entryeditor.template.html" />
+  </ItemGroup>
+
+</Project>

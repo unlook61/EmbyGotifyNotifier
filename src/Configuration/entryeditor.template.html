@@ -1,0 +1,24 @@
+<div class="inputContainer">
+    <input is="emby-input" type="text" class="txtFriendlyName" label="备注名称" />
+    <div class="fieldDescription">仅用于在通知列表中区分这条配置，可以留空。Gotify 服务器地址与 Token 请在「插件 → Gotify Notifications」中统一设置。</div>
+</div>
+
+<div class="inputContainer">
+    <input is="emby-input" type="number" class="txtEntryPriority" min="0" max="10" step="1" label="优先级覆盖（0-10，留空用全局）" />
+    <div class="fieldDescription">只影响这条通知的 Gotify 优先级，例如给「播放通知」单独设低优先级。</div>
+</div>
+
+<div class="inputContainer">
+    <input is="emby-input" type="text" class="txtEntryTitleTemplate" label="标题模板覆盖（留空用全局）" />
+    <div class="fieldDescription">可用变量与全局模板相同，例如 {UserName} 开始播放 {TitleLine}。</div>
+</div>
+
+<div class="inputContainer">
+    <textarea is="emby-textarea" class="txtEntryMessageTemplate" label="正文模板覆盖（留空用全局）"></textarea>
+    <div class="fieldDescription">留空表示使用插件设置里的正文模板。</div>
+</div>
+
+<div class="fieldDescription" style="margin-top:0.5em">
+    勾选下方的「新媒体入库」后保存，之后有新影片/剧集入库时会推送到手机。
+    若想先验证推送是否正常，可到插件配置页点「发送测试通知」。
+</div>
