@@ -428,6 +428,21 @@ namespace Emby.Plugin.GotifyNotifications
                 };
             }
 
+            // Markdown 排版：声明内容类型，Gotify 客户端在应用内查看时按 Markdown 渲染。
+            // 注意：手机系统通知栏始终显示纯文本，不会渲染 Markdown。
+            if (options.UseMarkdown)
+            {
+                if (payload.Extras == null)
+                {
+                    payload.Extras = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                }
+
+                payload.Extras["client::display"] = new Dictionary<string, string>
+                {
+                    ["contentType"] = "text/markdown"
+                };
+            }
+
             return jsonSerializer.SerializeToString(payload);
         }
 

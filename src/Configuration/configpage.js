@@ -2,7 +2,7 @@ define(['baseView', 'loading', 'globalize', 'emby-linkbutton', 'emby-checkbox', 
     'use strict';
 
     // 与插件 AssemblyVersion 保持一致，方便用户确认当前加载的是哪一版 DLL
-    var PluginVersion = '2.2.0';
+    var PluginVersion = '2.3.0';
 
     /**
      * 模板变量说明。groups 决定该变量出现在「标题模板」还是「正文模板」下方。

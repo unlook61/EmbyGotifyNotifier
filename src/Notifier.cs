@@ -636,47 +636,107 @@ namespace Emby.Plugin.GotifyNotifications
             string eventId = (request.Event ?? string.Empty).ToLowerInvariant();
             string titleLine = values["{TitleLine}"];
 
+            // 播放类事件：谁、在哪台设备、看到哪
             if (eventId.StartsWith("playback.", StringComparison.OrdinalIgnoreCase))
             {
                 StringBuilder builder = new StringBuilder(titleLine);
 
+                string user = values["{UserName}"];
+                if (!string.IsNullOrEmpty(user))
+                {
+                    builder.Append("\n\U0001F464 ").Append(user);
+                }
+
                 string device = values["{DeviceName}"];
                 string client = values["{ClientName}"];
-                if (!string.IsNullOrEmpty(device) || !string.IsNullOrEmpty(client))
+                if (!string.IsNullOrEmpty(device))
                 {
-                    builder.Append("\n设备：").Append(device);
+                    builder.Append("\n\U0001F4F1 ").Append(device);
                     if (!string.IsNullOrEmpty(client))
                     {
-                        builder.Append("（").Append(client).Append("）");
+                        builder.Append(" · ").Append(client);
                     }
+                }
+                else if (!string.IsNullOrEmpty(client))
+                {
+                    builder.Append("\n\U0001F4F1 ").Append(client);
                 }
 
                 string progress = values["{Progress}"];
                 if (!string.IsNullOrEmpty(progress))
                 {
-                    builder.Append("\n进度：").Append(progress);
+                    builder.Append("\n\u23F1 ").Append(progress);
                 }
 
                 return builder.ToString();
             }
 
+            // 媒体类事件：标题 + 一行元信息 + 简介
+            StringBuilder media = new StringBuilder(titleLine);
+
+            string typeName = values["{TypeName}"];
+            string year = values["{Year}"];
+            string genres = values["{Genres}"];
+            string rating = values["{Rating}"];
+            string runtime = values["{Runtime}"];
+
+            List<string> meta = new List<string>();
+            if (!string.IsNullOrEmpty(typeName))
+            {
+                meta.Add("\U0001F4FA " + typeName);
+            }
+
+            if (!string.IsNullOrEmpty(year) && year != "0")
+            {
+                meta.Add(year);
+            }
+
+            if (!string.IsNullOrEmpty(rating))
+            {
+                meta.Add("\u2B50 " + rating);
+            }
+
+            if (!string.IsNullOrEmpty(runtime))
+            {
+                meta.Add("\u23F1 " + runtime);
+            }
+
+            if (!string.IsNullOrEmpty(genres))
+            {
+                meta.Add(genres);
+            }
+
             string overview = values["{Overview}"];
+            string description = request.Description;
+
+            if (meta.Count == 0
+                && string.IsNullOrEmpty(overview)
+                && string.IsNullOrEmpty(description))
+            {
+                // 没有任何附加信息，保持原样
+                return titleLine;
+            }
+
+            if (meta.Count > 0)
+            {
+                media.Append("\n").Append(string.Join(" · ", meta.ToArray()));
+            }
+
             if (!string.IsNullOrEmpty(overview))
             {
-                return titleLine + "\n\n" + overview;
+                media.Append("\n\n").Append(overview);
             }
-
-            // 系统/任务类事件：Emby 的描述信息通常更有用
-            if (!string.IsNullOrEmpty(request.Description))
+            else if (!string.IsNullOrEmpty(description))
             {
-                return titleLine + "\n\n" + request.Description;
+                media.Append("\n\n").Append(description);
             }
 
-            return titleLine;
+            return media.ToString();
         }
 
         /// <summary>
-        /// 默认 Markdown 正文（Gotify 客户端支持渲染）
+        /// 默认 Markdown 正文。仅在 Gotify 应用内查看时渲染；
+        /// 系统通知栏显示纯文本，因此除标题粗体外不使用其他语法，减少符号噪音。
         /// </summary>
         private static string BuildMarkdownMessage(InternalNotificationRequest request, Dictionary<string, string> values)
         {
@@ -711,7 +771,7 @@ namespace Emby.Plugin.GotifyNotifications
 
             if (meta.Count > 0)
             {
-                builder.Append("\n\n`").Append(string.Join(" · ", meta.ToArray())).Append("`");
+                builder.Append("\n\n").Append(string.Join(" · ", meta.ToArray()));
             }
 
             string eventId = (request.Event ?? string.Empty).ToLowerInvariant();
@@ -733,7 +793,7 @@ namespace Emby.Plugin.GotifyNotifications
             string overview = values["{Overview}"];
             if (!string.IsNullOrEmpty(overview))
             {
-                builder.Append("\n\n> ").Append(overview.Replace("\n", "\n> "));
+                builder.Append("\n\n").Append(overview);
             }
 
             return builder.ToString();

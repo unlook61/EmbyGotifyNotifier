@@ -74,7 +74,7 @@
 
 | 选项 | 说明 |
 | --- | --- |
-| Markdown 排版 | 正文用 Markdown 生成（加粗标题、评分/年份/类型一行、简介引用块）。仅在正文模板为默认值时生效 |
+| Markdown 排版 | 正文按 Markdown 生成，**Gotify 应用内**查看时渲染加粗效果。注意：手机**系统通知栏**始终显示纯文本（会看到 `**` 符号）；关闭后同样有 emoji 美化排版，通知栏更干净 |
 | 使用横版剧照 | 通知大图用 16:9 剧照而非竖版海报；没有剧照时自动回退 |
 | 外部访问地址 | 如 `https://emby.example.com`。填写后点通知直达该媒体的详情页 |
 
@@ -96,7 +96,7 @@
 - **发送测试通知**：按**当前编辑好的标题/正文模板**生成一条**示意通知**推送到手机，排版与真实入库通知完全一致（示例数据：《星际穿越》(2014)、示例剧集 S01E02）。不需要先保存，直接使用页面上的服务器地址、Token 与模板；Token 显示为掩码时自动沿用已保存的真实 Token。结果会同时显示在页面顶部的状态条和弹窗里，失败时给出具体原因（如 `Token 无效或已失效`、`目标端口拒绝连接`、`Emby 对该地址有 30 秒冷却`）。
 - **保存**：将配置写入 `{programdata}/plugins/configurations/Gotify Notifications.json`，即时生效（无需重启）。
 
-> 页面最下方会显示插件版本（如 `Gotify Notifications v2.2.0`）。若看不到版本号，说明加载的仍是旧 DLL，请确认文件已替换并重启过 Emby。
+> 页面最下方会显示插件版本（如 `Gotify Notifications v2.3.0`）。若看不到版本号，说明加载的仍是旧 DLL，请确认文件已替换并重启过 Emby。
 >
 > 关于 Token 存储：配置页与 HTTP 接口只返回掩码，浏览器里不会出现明文；但服务端调用 Gotify 需要明文，因此 `{programdata}/plugins/configurations/Gotify Notifications.json` 内仍是明文，请确保该目录仅管理员可读。
 
@@ -186,7 +186,7 @@
 
 **点击插件没反应 / 没有弹窗？**
 
-1. 确认 Emby 版本与插件版本：`设置 → 插件` 中应显示 `Gotify Notifications 2.2.0.0`；配置页底部应有 `Gotify Notifications v2.2.0`。
+1. 确认 Emby 版本与插件版本：`设置 → 插件` 中应显示 `Gotify Notifications 2.3.0.0`；配置页底部应有 `Gotify Notifications v2.3.0`。
 2. 替换 DLL 后必须**重启 Emby Server**（不是刷新网页）。
 3. 浏览器可能缓存了旧的插件页面：在配置页按 `Ctrl + F5`（Mac 为 `Cmd + Shift + R`）强制刷新。
 4. 也可直接访问：`http://<Emby地址>:8096/web/index.html#!/configurationpage?name=gotifynotifierconfig`
@@ -204,7 +204,7 @@ v1.4.0 及更早版本存在此问题：插件未提供通知条目编辑器（`
 
 若升级后仍无反应：
 
-1. 确认插件版本为 `2.2.0.0`，并已重启 Emby；
+1. 确认插件版本为 `2.3.0.0`，并已重启 Emby；
 2. 按 `Ctrl + F5` 强制刷新，避免浏览器缓存旧页面；
 3. 按 `F12` 打开控制台，若看到 `configurationpage?name=gotifynotifyentryeditor` 404，说明新 DLL 未生效。
 
@@ -268,7 +268,14 @@ dotnet build -c Release
 
 ## 版本记录
 
-### v2.2.0（当前）
+### v2.3.0（当前）
+
+- **修复 Markdown 排版不生效**：此前发送的消息缺少 `client::display.contentType = text/markdown` 标记，即使 Gotify 应用内也不会渲染，`**` 全部原样显示；现在开启 Markdown 后正确携带该标记，应用内查看即为加粗排版。
+- **纯文本排版全面美化**：关闭 Markdown 时的默认正文改为结构化排版（`📺 类型 · 年份 · ⭐ 评分 · ⏱ 片长` 元信息行 + 简介），通知栏直接好看，无任何符号噪音；播放事件显示 `👤 用户`、`📱 设备 · 客户端`、`⏱ 进度`。
+- **精简 Markdown 语法密度**：默认 Markdown 正文只保留标题加粗（去掉了元信息行的反引号与简介的 `>` 引用符），系统通知栏上的符号噪音降到最低。
+- 配置页与文档明确说明：系统通知栏由 Android 决定，**永远显示纯文本**，Markdown 只在 Gotify 应用内渲染。
+
+### v2.2.0
 
 - 新增 `{EventEmoji}` 变量：渲染为事件对应的 emoji（`🎬` `🗑` `▶` `⏸` `✅` `🚀` `⭐` 等），与 `{EventName}` 搭配即可还原内置标题，如 `🎬 新媒体入库`。
 
