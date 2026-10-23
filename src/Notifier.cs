@@ -523,6 +523,86 @@ namespace Emby.Plugin.GotifyNotifications
         }
 
         /// <summary>
+        /// 事件的中文名称（不含 emoji 与用户名），供 {EventName} 变量使用
+        /// </summary>
+        private static string GetEventName(string eventId)
+        {
+            switch ((eventId ?? string.Empty).ToLowerInvariant())
+            {
+                case ItemAddedEventId:
+                    return "新媒体入库";
+                case ItemRemovedEventId:
+                    return "媒体被删除";
+                case ItemUpdatedEventId:
+                    return "媒体已更新";
+                case "playback.start":
+                    return "开始播放";
+                case "playback.pause":
+                    return "暂停播放";
+                case "playback.unpause":
+                    return "继续播放";
+                case "playback.stop":
+                    return "停止播放";
+                case "scheduledtasks.completed":
+                    return "计划任务完成";
+                case "scheduledtasks.failed":
+                    return "计划任务失败";
+                case "system.serverstartup":
+                    return "Emby 已启动";
+                case "system.updateavailable":
+                    return "Emby 有新版本";
+                case "system.serverrestartrequired":
+                    return "Emby 需要重启";
+                case "item.rate":
+                    return "评分";
+                case TestNotificationEventId:
+                    return "测试通知";
+                default:
+                    return string.IsNullOrWhiteSpace(eventId) ? "通知" : eventId;
+            }
+        }
+
+        /// <summary>
+        /// 事件对应的 emoji（不含文字），供 {EventEmoji} 变量使用
+        /// </summary>
+        private static string GetEventEmoji(string eventId)
+        {
+            switch ((eventId ?? string.Empty).ToLowerInvariant())
+            {
+                case ItemAddedEventId:
+                    return "\U0001F3AC";
+                case ItemRemovedEventId:
+                    return "\U0001F5D1";
+                case ItemUpdatedEventId:
+                    return "\U0001F504";
+                case "playback.start":
+                    return "\u25B6";
+                case "playback.pause":
+                    return "\u23F8";
+                case "playback.unpause":
+                    return "\u25B6";
+                case "playback.stop":
+                    return "\u23F9";
+                case "scheduledtasks.completed":
+                    return "\u2705";
+                case "scheduledtasks.failed":
+                    return "\u274C";
+                case "system.serverstartup":
+                    return "\U0001F680";
+                case "system.updateavailable":
+                    return "\u2B06";
+                case "system.serverrestartrequired":
+                    return "\U0001F501";
+                case "item.rate":
+                    return "\u2B50";
+                case TestNotificationEventId:
+                    return "\U0001F9EA";
+                default:
+                    return "\U0001F514";
+            }
+        }
+
+        /// <summary>
         /// 生成通知正文：自定义模板优先，否则按事件类型生成默认排版
         /// </summary>
         private static string BuildMessage(
@@ -854,6 +934,8 @@ namespace Emby.Plugin.GotifyNotifications
                 ["{ServerName}"] = serverName,
                 ["{Url}"] = request.Url ?? string.Empty,
                 ["{Event}"] = request.Event ?? string.Empty,
+                ["{EventName}"] = GetEventName(request.Event),
+                ["{EventEmoji}"] = GetEventEmoji(request.Event),
                 ["{Date}"] = request.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
                 ["{Count}"] = "1",
 

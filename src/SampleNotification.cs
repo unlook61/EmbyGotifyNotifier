@@ -57,6 +57,8 @@ namespace Emby.Plugin.GotifyNotifications
                 ["{ServerName}"] = serverName ?? string.Empty,
                 ["{Url}"] = "https://emby.example.com/web/index.html#!/item?id=12345",
                 ["{Event}"] = "library.new",
+                ["{EventName}"] = "新媒体入库",
+                ["{EventEmoji}"] = "\U0001F3AC",
                 ["{Date}"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
                 ["{Count}"] = "1"
             };

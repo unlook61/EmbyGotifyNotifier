@@ -1,5 +1,8 @@
 # Emby Gotify 通知插件（Emby.GotifyNotifier）
 
+> ⚠️ **本仓库及其中全部内容（包括但不限于源码、文档、截图）完全由 AI 生成和制作。**
+> 未经许可，禁止对仓库内容进行任何形式的修改、复制或二次分发。
+
 将 Emby 的**媒体库入库通知**通过 [Gotify](https://gotify.net) 推送到手机。
 
 - **入库推送**（`library.new`）+ **媒体删除**（`library.deleted`）
@@ -93,7 +96,7 @@
 - **发送测试通知**：按**当前编辑好的标题/正文模板**生成一条**示意通知**推送到手机，排版与真实入库通知完全一致（示例数据：《星际穿越》(2014)、示例剧集 S01E02）。不需要先保存，直接使用页面上的服务器地址、Token 与模板；Token 显示为掩码时自动沿用已保存的真实 Token。结果会同时显示在页面顶部的状态条和弹窗里，失败时给出具体原因（如 `Token 无效或已失效`、`目标端口拒绝连接`、`Emby 对该地址有 30 秒冷却`）。
 - **保存**：将配置写入 `{programdata}/plugins/configurations/Gotify Notifications.json`，即时生效（无需重启）。
 
-> 页面最下方会显示插件版本（如 `Gotify Notifications v2.0.0`）。若看不到版本号，说明加载的仍是旧 DLL，请确认文件已替换并重启过 Emby。
+> 页面最下方会显示插件版本（如 `Gotify Notifications v2.2.0`）。若看不到版本号，说明加载的仍是旧 DLL，请确认文件已替换并重启过 Emby。
 >
 > 关于 Token 存储：配置页与 HTTP 接口只返回掩码，浏览器里不会出现明文；但服务端调用 Gotify 需要明文，因此 `{programdata}/plugins/configurations/Gotify Notifications.json` 内仍是明文，请确保该目录仅管理员可读。
 
@@ -141,6 +144,8 @@
 | `{Runtime}` | 片长 | `128 分钟` |
 | `{OfficialRating}` | 分级 | `PG-13` |
 | `{Event}` | 事件 ID | `library.new` |
+| `{EventName}` | 事件中文名称 | `新媒体入库` / `媒体被删除` |
+| `{EventEmoji}` | 事件图标（emoji） | `🎬` / `🗑` / `▶` |
 | `{Date}` | 入库时间 | `2026-10-22 11:30` |
 | `{Count}` | 合并通知的条目数 | `12` |
 
@@ -181,7 +186,7 @@
 
 **点击插件没反应 / 没有弹窗？**
 
-1. 确认 Emby 版本与插件版本：`设置 → 插件` 中应显示 `Gotify Notifications 2.0.0.0`；配置页底部应有 `Gotify Notifications v2.0.0`。
+1. 确认 Emby 版本与插件版本：`设置 → 插件` 中应显示 `Gotify Notifications 2.2.0.0`；配置页底部应有 `Gotify Notifications v2.2.0`。
 2. 替换 DLL 后必须**重启 Emby Server**（不是刷新网页）。
 3. 浏览器可能缓存了旧的插件页面：在配置页按 `Ctrl + F5`（Mac 为 `Cmd + Shift + R`）强制刷新。
 4. 也可直接访问：`http://<Emby地址>:8096/web/index.html#!/configurationpage?name=gotifynotifierconfig`
@@ -199,7 +204,7 @@ v1.4.0 及更早版本存在此问题：插件未提供通知条目编辑器（`
 
 若升级后仍无反应：
 
-1. 确认插件版本为 `2.0.0.0`，并已重启 Emby；
+1. 确认插件版本为 `2.2.0.0`，并已重启 Emby；
 2. 按 `Ctrl + F5` 强制刷新，避免浏览器缓存旧页面；
 3. 按 `F12` 打开控制台，若看到 `configurationpage?name=gotifynotifyentryeditor` 404，说明新 DLL 未生效。
 
@@ -263,7 +268,15 @@ dotnet build -c Release
 
 ## 版本记录
 
-### v2.0.0（当前）
+### v2.2.0（当前）
+
+- 新增 `{EventEmoji}` 变量：渲染为事件对应的 emoji（`🎬` `🗑` `▶` `⏸` `✅` `🚀` `⭐` 等），与 `{EventName}` 搭配即可还原内置标题，如 `🎬 新媒体入库`。
+
+### v2.1.0
+
+- 新增 `{EventName}` 变量：渲染为事件的中文名称（`新媒体入库`、`媒体被删除`、`开始播放`、`计划任务完成` 等），标题/正文模板均可使用；`{Event}` 变量同步加入标题模板可用列表。
+
+### v2.0.0
 
 - **事件扩展**：支持播放（开始/暂停/继续/停止，带用户与设备）、计划任务完成/失败、服务器启动/需要重启/有新版本、媒体删除、用户评分；每个事件都有内置中文标题，自定义模板时全部套用。
 - **规则过滤**：媒体类型、媒体库（多选）、标签、最低评分、最早年份、忽略关键字；被过滤的通知在诊断面板显示原因。系统/任务类通知不受过滤影响。

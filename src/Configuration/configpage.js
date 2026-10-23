@@ -2,7 +2,7 @@ define(['baseView', 'loading', 'globalize', 'emby-linkbutton', 'emby-checkbox', 
     'use strict';
 
     // 与插件 AssemblyVersion 保持一致，方便用户确认当前加载的是哪一版 DLL
-    var PluginVersion = '2.0.0';
+    var PluginVersion = '2.2.0';
 
     /**
      * 模板变量说明。groups 决定该变量出现在「标题模板」还是「正文模板」下方。
@@ -111,7 +111,21 @@ define(['baseView', 'loading', 'globalize', 'emby-linkbutton', 'emby-checkbox', 
             label: '事件',
             desc: '触发通知的事件 ID',
             example: 'library.new',
-            groups: ['message']
+            groups: ['title', 'message']
+        },
+        {
+            token: '{EventName}',
+            label: '事件名称',
+            desc: '触发通知的中文事件名',
+            example: '新媒体入库 / 媒体被删除',
+            groups: ['title', 'message']
+        },
+        {
+            token: '{EventEmoji}',
+            label: '事件图标',
+            desc: '触发事件对应的 emoji（不含文字）',
+            example: '🎬 / 🗑 / ▶',
+            groups: ['title', 'message']
         },
         {
             token: '{UserName}',
